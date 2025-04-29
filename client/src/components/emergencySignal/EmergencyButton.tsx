@@ -71,7 +71,7 @@ const EmergencyButton = () => {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative inline-block">
         <div className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-25"></div>
         <Button
           onClick={() => setIsOpen(true)}

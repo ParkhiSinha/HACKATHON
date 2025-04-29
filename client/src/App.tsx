@@ -23,26 +23,37 @@ import Teams from "@/pages/police/Teams";
 // WebSocket connection for real-time updates
 function useWebSocket() {
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [retryCount, setRetryCount] = useState(0);
-  const maxRetries = 3;
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    // Create WebSocket connection
+    // Create a reference to track the WebSocket attempts
+    let reconnectInterval: ReturnType<typeof setInterval> | null = null;
     let ws: WebSocket | null = null;
+    let unmounted = false;
     
     const connectWebSocket = () => {
       try {
+        // If already connected or unmounted, don't try to reconnect
+        if (connected || unmounted) return;
+        
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const host = window.location.host;
-        // Use the same port as the application is running on in Replit with the /ws path
         const wsUrl = `${protocol}//${host}/ws`;
         
         console.log(`Connecting to WebSocket at ${wsUrl}`);
+        
+        // Create a new WebSocket instance
         ws = new WebSocket(wsUrl);
         
         ws.onopen = () => {
           console.log('WebSocket connection established');
-          setRetryCount(0); // Reset retry count on successful connection
+          setConnected(true);
+          
+          // Clear any reconnection attempts
+          if (reconnectInterval) {
+            clearInterval(reconnectInterval);
+            reconnectInterval = null;
+          }
         };
         
         ws.onmessage = (event) => {
@@ -50,13 +61,8 @@ function useWebSocket() {
             const data = JSON.parse(event.data);
             console.log('WebSocket message received:', data);
             
-            // Handle emergency signals
-            if (data.type === 'EMERGENCY_SIGNAL') {
-              queryClient.invalidateQueries({ queryKey: ['/api/emergency'] });
-            }
-            
-            // Handle emergency resolution
-            if (data.type === 'EMERGENCY_RESOLVED') {
+            // Handle specific message types
+            if (data.type === 'EMERGENCY_SIGNAL' || data.type === 'EMERGENCY_RESOLVED') {
               queryClient.invalidateQueries({ queryKey: ['/api/emergency'] });
             }
           } catch (error) {
@@ -66,57 +72,71 @@ function useWebSocket() {
         
         ws.onerror = (error) => {
           console.error('WebSocket error:', error);
+          setConnected(false);
         };
         
-        ws.onclose = (event) => {
-          console.log(`WebSocket connection closed: ${event.code} ${event.reason}`);
+        ws.onclose = () => {
+          console.log('WebSocket connection closed');
+          setConnected(false);
           
-          // Attempt to reconnect unless we've reached max retries
-          if (retryCount < maxRetries) {
-            console.log(`Attempting to reconnect (${retryCount + 1}/${maxRetries})...`);
-            const timeout = Math.min(1000 * 2 ** retryCount, 10000); // Exponential backoff
-            setTimeout(() => {
-              setRetryCount(prev => prev + 1);
-              if (ws) {
-                try {
-                  ws.close();
-                } catch (e) {
-                  console.error('Error closing WebSocket:', e);
-                }
+          // Only try to reconnect if the component is still mounted
+          if (!unmounted && !reconnectInterval) {
+            reconnectInterval = setInterval(() => {
+              if (!connected && !unmounted) {
+                console.log('Attempting to reconnect WebSocket...');
+                connectWebSocket();
+              } else if (connected || unmounted) {
+                clearInterval(reconnectInterval!);
+                reconnectInterval = null;
               }
-              connectWebSocket();
-            }, timeout);
-          } else {
-            console.log('Max WebSocket reconnection attempts reached');
+            }, 5000);
           }
         };
         
         setSocket(ws);
       } catch (error) {
         console.error('Error creating WebSocket:', error);
+        setConnected(false);
       }
     };
 
+    // Initial connection
     connectWebSocket();
 
     // Clean up on unmount
     return () => {
+      unmounted = true;
+      
+      if (reconnectInterval) {
+        clearInterval(reconnectInterval);
+      }
+      
       if (ws) {
         try {
+          // First remove all event listeners to prevent reacting to close event
+          ws.onclose = null;
+          ws.onerror = null;
+          ws.onmessage = null;
+          ws.onopen = null;
+          
+          // Then close the connection
           ws.close();
         } catch (e) {
           console.error('Error closing WebSocket during cleanup:', e);
         }
       }
+      
+      setConnected(false);
+      setSocket(null);
     };
-  }, [retryCount]);
+  }, []);
 
-  return socket;
+  return { socket, connected };
 }
 
 function Router() {
   const { data: auth, isLoading } = useUser();
-  useWebSocket();
+  const { connected } = useWebSocket();
   
   // If loading auth state, show nothing (avoid flash)
   if (isLoading) {
