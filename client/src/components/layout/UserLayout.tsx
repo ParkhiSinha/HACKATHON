@@ -58,7 +58,7 @@ const UserLayout = ({ children, title }: UserLayoutProps) => {
                 <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.636 4.636a6 6 0 018.728 8.728 6 6 0 01-8.728-8.728z" clipRule="evenodd"></path>
                 <path d="M10 4a6 6 0 00-6 6h2a4 4 0 014-4V4z"></path>
               </svg> */}
-              <img src="namma_logo" alt="logo" className="h-10 w-auto" />
+              <img src="namma_logo.png" alt="logo" className="h-10 w-auto" />
               <h1 className="ml-2 text-xl font-semibold text-gray-800">Namma Suraksha</h1>
             </div>
             
