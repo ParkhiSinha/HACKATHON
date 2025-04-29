@@ -52,11 +52,12 @@ const PoliceLayout = ({ children, title }: PoliceLayoutProps) => {
       {/* Sidebar */}
       <div className="w-64 bg-police text-white fixed inset-y-0 left-0 z-10 hidden md:flex md:flex-col">
         <div className="p-4 border-b border-blue-900 flex items-center">
-          <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+          {/* <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.636 4.636a6 6 0 018.728 8.728 6 6 0 01-8.728-8.728z" clipRule="evenodd"></path>
             <path d="M10 4a6 6 0 00-6 6h2a4 4 0 014-4V4z"></path>
-          </svg>
-          <h1 className="ml-2 text-xl font-semibold">SafetyNet</h1>
+          </svg> */}
+          <img src="namma_logo.png" alt="logo" className="h-10 w-auto"/>
+          <h1 className="ml-2 text-xl font-semibold">Namma Suraksha</h1>
         </div>
         
         <div className="flex flex-col flex-1 overflow-y-auto">
@@ -129,11 +130,12 @@ const PoliceLayout = ({ children, title }: PoliceLayoutProps) => {
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center">
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="mr-2">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              {/* <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              </svg> */}
+              <img src="namma_logo.png" alt="logo" className="h-10 w-auto"/>
             </button>
-            <h1 className="text-lg font-semibold">SafetyNet</h1>
+            <h1 className="text-lg font-semibold">Namma Suraksha</h1>
           </div>
           <div className="flex items-center space-x-3">
             <button>

@@ -75,11 +75,12 @@ export default function Login() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
-            <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+            {/* <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.636 4.636a6 6 0 018.728 8.728 6 6 0 01-8.728-8.728z" clipRule="evenodd"></path>
               <path d="M10 4a6 6 0 00-6 6h2a4 4 0 014-4V4z"></path>
-            </svg>
-            <h1 className="ml-2 text-2xl font-bold text-gray-800">SafetyNet</h1>
+            </svg> */}
+            <img src="namma_logo" alt="logo" className="h-10 w-auto" />
+            <h1 className="ml-2 text-2xl font-bold text-gray-800">Namma Suraksha</h1>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
             Log in to your account

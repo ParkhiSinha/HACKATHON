@@ -4,7 +4,7 @@ import "./index.css";
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 
 // Set title for the application
-document.title = "SafetyNet - Crime Reporting & Police Dashboard";
+document.title = "Namma Suraksha - Crime Reporting & Police Dashboard";
 
 // Create and insert favicon link
 const faviconLink = document.createElement("link");

@@ -44,7 +44,7 @@ const AuthScreen = () => {
             
             <div className="mt-8 text-center text-sm text-gray-500">
               <p>In case of immediate danger, call emergency services directly.</p>
-              <p className="font-semibold mt-1">Emergency: 911</p>
+              <p className="font-semibold mt-1">Emergency: 112 / 100</p>
             </div>
           </div>
           
@@ -65,11 +65,12 @@ const AccessTypeSelector = ({ onSelect }: { onSelect: (role: 'civilian' | 'polic
   return (
     <div>
       <div className="flex items-center mb-8">
-        <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+        {/* <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.636 4.636a6 6 0 018.728 8.728 6 6 0 01-8.728-8.728z" clipRule="evenodd"></path>
           <path d="M10 4a6 6 0 00-6 6h2a4 4 0 014-4V4z"></path>
-        </svg>
-        <h1 className="ml-2 text-2xl font-bold text-gray-800">SafetyNet</h1>
+        </svg> */}
+        <img src="namma_logo.png" alt="logo" className="h-10 w-auto"/>
+        <h1 className="ml-2 text-2xl font-bold text-gray-800">Namma Suraksha</h1>
       </div>
       <h2 className="text-xl font-semibold text-gray-700 mb-6">Choose your access type</h2>
       
@@ -161,11 +162,12 @@ const LoginForm = ({
       </button>
       
       <div className="flex items-center mb-8">
-        <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+        {/* <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.636 4.636a6 6 0 018.728 8.728 6 6 0 01-8.728-8.728z" clipRule="evenodd"></path>
           <path d="M10 4a6 6 0 00-6 6h2a4 4 0 014-4V4z"></path>
-        </svg>
-        <h1 className="ml-2 text-2xl font-bold text-gray-800">SafetyNet</h1>
+        </svg> */}
+        <img src="namma_logo.png" alt="logo" className="h-10 w-auto" />
+        <h1 className="ml-2 text-2xl font-bold text-gray-800">Namma Suraksha</h1>
       </div>
       
       <h2 className="text-xl font-semibold text-gray-700 mb-6">
@@ -212,7 +214,7 @@ const LoginForm = ({
             </Button>
           </div>
           
-          <div className="text-center text-sm">
+          {/* <div className="text-center text-sm">
             <p className="text-gray-600">
               Don't have an account?{" "}
               <button 
@@ -223,7 +225,22 @@ const LoginForm = ({
                 Register
               </button>
             </p>
-          </div>
+          </div> */}
+
+          {role === 'civilian' && (
+            <div className="text-center text-sm">
+              <p className="text-gray-600">
+                Don't have an account?{" "}
+                <button 
+                  type="button"
+                  onClick={onRegister}
+                  className="text-primary font-medium hover:underline"
+                >
+                  Register
+                </button>
+              </p>
+            </div>
+          )}
         </form>
       </Form>
     </div>
@@ -293,11 +310,12 @@ const RegisterForm = ({
       </button>
       
       <div className="flex items-center mb-8">
-        <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
+        {/* <svg className="w-10 h-10 text-primary-dark" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.636 4.636a6 6 0 018.728 8.728 6 6 0 01-8.728-8.728z" clipRule="evenodd"></path>
           <path d="M10 4a6 6 0 00-6 6h2a4 4 0 014-4V4z"></path>
-        </svg>
-        <h1 className="ml-2 text-2xl font-bold text-gray-800">SafetyNet</h1>
+        </svg> */}
+        <img src="namma_logo.png" alt="logo" className="h-10 w-auto" />
+        <h1 className="ml-2 text-2xl font-bold text-gray-800">Namma Suraksha</h1>
       </div>
       
       <h2 className="text-xl font-semibold text-gray-700 mb-6">
