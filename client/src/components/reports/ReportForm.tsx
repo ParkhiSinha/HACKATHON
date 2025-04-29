@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -134,6 +134,8 @@ export default function ReportForm() {
 
     return cleanup;
   }, [setupLocationSelect, form]);
+
+ 
 
   // Handle file upload
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -331,7 +333,56 @@ export default function ReportForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
+                  <div
+                    id={mapContainerId}
+                    className="map-container rounded-lg overflow-hidden mb-2 h-60"
+                  ></div>
+                  <div className="flex space-x-2">
+                    <FormControl className="flex-1">
+                      <Input
+                        placeholder="Search for address or click on the map to select location"
+                        {...field}
+                        value={
+                          selectedLocation.locationText || field.value
+                        }
+                      />
+                    </FormControl>
+                    {selectedLocation.latitude && (
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        className="bg-slate-50 text-slate-700 border-slate-200"
+                        onClick={() => {
+                          setSelectedLocation({
+                            latitude: "",
+                            longitude: "",
+                            locationText: "",
+                          });
+                          form.setValue("latitude", "");
+                          form.setValue("longitude", "");
+                          form.setValue("location", "");
+                        }}
+                      >
+                        Clear Location
+                      </Button>
+                    )}
+                  </div>
+                  <FormDescription>
+                    Click on the map to select the incident location in Bengaluru
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <FormField
                 control={form.control}
                 name="crimeType"
@@ -386,55 +437,6 @@ export default function ReportForm() {
                 )}
               />
             </div>
-
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <div
-                    id={mapContainerId}
-                    className="map-container rounded-lg overflow-hidden mb-2 h-60"
-                  ></div>
-                  <div className="flex space-x-2">
-                    <FormControl className="flex-1">
-                      <Input
-                        placeholder="Search for address or click on the map to select location"
-                        {...field}
-                        value={
-                          selectedLocation.locationText || field.value
-                        }
-                      />
-                    </FormControl>
-                    {selectedLocation.latitude && (
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        size="sm"
-                        className="bg-slate-50 text-slate-700 border-slate-200"
-                        onClick={() => {
-                          setSelectedLocation({
-                            latitude: "",
-                            longitude: "",
-                            locationText: "",
-                          });
-                          form.setValue("latitude", "");
-                          form.setValue("longitude", "");
-                          form.setValue("location", "");
-                        }}
-                      >
-                        Clear Location
-                      </Button>
-                    )}
-                  </div>
-                  <FormDescription>
-                    Click on the map to select the incident location in Bengaluru
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <FormField
               control={form.control}
