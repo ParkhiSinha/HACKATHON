@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import EmergencyButton from "@/components/emergencySignal/EmergencyButton";
+import LanguageSelector, { LanguageSelectorMobile } from "@/components/LanguageSelector";
 import { useToast } from "@/hooks/use-toast";
 
 interface UserLayoutProps {
@@ -81,6 +82,10 @@ const UserLayout = ({ children, title }: UserLayoutProps) => {
             <div className="flex items-center space-x-4">
               <EmergencyButton />
               
+              <div className="hidden md:block">
+                <LanguageSelector />
+              </div>
+              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="p-0">
@@ -113,6 +118,9 @@ const UserLayout = ({ children, title }: UserLayoutProps) => {
         
         {/* Mobile Navigation */}
         <div className={`md:hidden bg-gray-50 border-t ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+          <div className="px-4 py-2 flex justify-end border-b border-gray-200">
+            <LanguageSelectorMobile />
+          </div>
           <nav className="flex justify-between px-4 py-3">
             <Link href="/">
               <a className={`${location === '/' ? 'text-primary' : 'text-gray-500'} flex flex-col items-center text-xs`}>

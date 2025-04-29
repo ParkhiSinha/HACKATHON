@@ -102,8 +102,8 @@ export const useMap = (
       if (markersRef.current[markerId]) {
         // Update existing marker position
         markersRef.current[markerId].setLatLng([lat, lng]);
-      } else {
-        // Create new marker
+      } else if (mapRef.current) {
+        // Create new marker only if map is initialized
         const icon = createMarkerIcon(color);
         const newMarker = L.marker([lat, lng], { icon })
           .addTo(mapRef.current)
