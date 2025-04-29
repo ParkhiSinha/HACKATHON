@@ -62,21 +62,24 @@ const UserLayout = ({ children, title }: UserLayoutProps) => {
             </div>
             
             <nav className="hidden md:flex space-x-8">
-              <Link href="/">
-                <a className={`${location === '/' ? 'text-gray-800 font-medium' : 'text-gray-500'} hover:text-primary`}>
-                  Dashboard
-                </a>
-              </Link>
-              <Link href="/report">
-                <a className={`${location === '/report' ? 'text-gray-800 font-medium' : 'text-gray-500'} hover:text-primary`}>
-                  Report Crime
-                </a>
-              </Link>
-              <Link href="/my-reports">
-                <a className={`${location === '/my-reports' ? 'text-gray-800 font-medium' : 'text-gray-500'} hover:text-primary`}>
-                  My Reports
-                </a>
-              </Link>
+              <div
+                onClick={() => window.location.href = '/'}
+                className={`${location === '/' ? 'text-gray-800 font-medium' : 'text-gray-500'} hover:text-primary cursor-pointer`}
+              >
+                Dashboard
+              </div>
+              <div
+                onClick={() => window.location.href = '/report'}
+                className={`${location === '/report' ? 'text-gray-800 font-medium' : 'text-gray-500'} hover:text-primary cursor-pointer`}
+              >
+                Report Crime
+              </div>
+              <div
+                onClick={() => window.location.href = '/my-reports'}
+                className={`${location === '/my-reports' ? 'text-gray-800 font-medium' : 'text-gray-500'} hover:text-primary cursor-pointer`}
+              >
+                My Reports
+              </div>
             </nav>
             
             <div className="flex items-center space-x-4">

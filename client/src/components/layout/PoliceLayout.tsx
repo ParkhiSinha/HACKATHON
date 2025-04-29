@@ -61,37 +61,42 @@ const PoliceLayout = ({ children, title }: PoliceLayoutProps) => {
         
         <div className="flex flex-col flex-1 overflow-y-auto">
           <nav className="flex-1 px-2 py-4 space-y-1">
-            <Link href="/">
-              <a className={`flex items-center px-4 py-2 text-white ${location === '/' ? 'bg-police-light' : ''} rounded-lg hover:bg-police-light`}>
-                <BarChart3 className="w-5 h-5 mr-3" />
-                <span>Dashboard</span>
-              </a>
-            </Link>
-            <Link href="/reports">
-              <a className={`flex items-center px-4 py-2 ${location === '/reports' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg`}>
-                <ClipboardList className="w-5 h-5 mr-3" />
-                <span>Reports</span>
-              </a>
-            </Link>
-            <Link href="/map">
-              <a className={`flex items-center px-4 py-2 ${location === '/map' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg`}>
+            <div 
+              onClick={() => window.location.href = '/'}
+              className={`flex items-center px-4 py-2 text-white ${location === '/' ? 'bg-police-light' : ''} rounded-lg hover:bg-police-light cursor-pointer`}
+            >
+              <BarChart3 className="w-5 h-5 mr-3" />
+              <span>Dashboard</span>
+            </div>
+            <div 
+              onClick={() => window.location.href = '/reports'}
+              className={`flex items-center px-4 py-2 ${location === '/reports' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg cursor-pointer`}
+            >
+              <ClipboardList className="w-5 h-5 mr-3" />
+              <span>Reports</span>
+            </div>
+            <div 
+              onClick={() => window.location.href = '/map'}
+              className={`flex items-center px-4 py-2 ${location === '/map' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg cursor-pointer`}
+            >
                 <Map className="w-5 h-5 mr-3" />
                 <span>Crime Map</span>
-              </a>
-            </Link>
-            <Link href="/teams">
-              <a className={`flex items-center px-4 py-2 ${location === '/teams' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg`}>
+            </div>
+            <div 
+              onClick={() => window.location.href = '/teams'}
+              className={`flex items-center px-4 py-2 ${location === '/teams' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg cursor-pointer`}
+            >
                 <Users className="w-5 h-5 mr-3" />
                 <span>Teams</span>
-              </a>
-            </Link>
-            <Link href="/alerts">
-              <a className={`flex items-center px-4 py-2 ${location === '/alerts' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg`}>
+            </div>
+            <div 
+              onClick={() => window.location.href = '/alerts'}
+              className={`flex items-center px-4 py-2 ${location === '/alerts' ? 'text-white bg-police-light' : 'text-blue-100'} hover:bg-police-light hover:text-white rounded-lg cursor-pointer`}
+            >
                 <Bell className="w-5 h-5 mr-3" />
                 <span>Alerts</span>
                 <Badge variant="destructive" className="ml-auto bg-secondary text-white">3</Badge>
-              </a>
-            </Link>
+            </div>
           </nav>
           
           <div className="p-4 border-t border-blue-900">
@@ -145,36 +150,41 @@ const PoliceLayout = ({ children, title }: PoliceLayoutProps) => {
         {isMobileMenuOpen && (
           <div className="bg-police-dark border-t border-blue-900">
             <nav className="py-2">
-              <Link href="/">
-                <a className={`flex items-center px-4 py-2 ${location === '/' ? 'bg-police-light' : ''}`}>
-                  <BarChart3 className="w-5 h-5 mr-3" />
-                  <span>Dashboard</span>
-                </a>
-              </Link>
-              <Link href="/reports">
-                <a className={`flex items-center px-4 py-2 ${location === '/reports' ? 'bg-police-light' : ''}`}>
-                  <ClipboardList className="w-5 h-5 mr-3" />
-                  <span>Reports</span>
-                </a>
-              </Link>
-              <Link href="/map">
-                <a className={`flex items-center px-4 py-2 ${location === '/map' ? 'bg-police-light' : ''}`}>
-                  <Map className="w-5 h-5 mr-3" />
-                  <span>Crime Map</span>
-                </a>
-              </Link>
-              <Link href="/teams">
-                <a className={`flex items-center px-4 py-2 ${location === '/teams' ? 'bg-police-light' : ''}`}>
-                  <Users className="w-5 h-5 mr-3" />
-                  <span>Teams</span>
-                </a>
-              </Link>
-              <Link href="/alerts">
-                <a className={`flex items-center px-4 py-2 ${location === '/alerts' ? 'bg-police-light' : ''}`}>
-                  <Bell className="w-5 h-5 mr-3" />
-                  <span>Alerts</span>
-                </a>
-              </Link>
+              <div 
+                onClick={() => window.location.href = '/'} 
+                className={`flex items-center px-4 py-2 ${location === '/' ? 'bg-police-light' : ''} cursor-pointer`}
+              >
+                <BarChart3 className="w-5 h-5 mr-3" />
+                <span>Dashboard</span>
+              </div>
+              <div 
+                onClick={() => window.location.href = '/reports'} 
+                className={`flex items-center px-4 py-2 ${location === '/reports' ? 'bg-police-light' : ''} cursor-pointer`}
+              >
+                <ClipboardList className="w-5 h-5 mr-3" />
+                <span>Reports</span>
+              </div>
+              <div 
+                onClick={() => window.location.href = '/map'} 
+                className={`flex items-center px-4 py-2 ${location === '/map' ? 'bg-police-light' : ''} cursor-pointer`}
+              >
+                <Map className="w-5 h-5 mr-3" />
+                <span>Crime Map</span>
+              </div>
+              <div 
+                onClick={() => window.location.href = '/teams'} 
+                className={`flex items-center px-4 py-2 ${location === '/teams' ? 'bg-police-light' : ''} cursor-pointer`}
+              >
+                <Users className="w-5 h-5 mr-3" />
+                <span>Teams</span>
+              </div>
+              <div 
+                onClick={() => window.location.href = '/alerts'} 
+                className={`flex items-center px-4 py-2 ${location === '/alerts' ? 'bg-police-light' : ''} cursor-pointer`}
+              >
+                <Bell className="w-5 h-5 mr-3" />
+                <span>Alerts</span>
+              </div>
               <button 
                 onClick={handleLogout}
                 disabled={logout.isPending}

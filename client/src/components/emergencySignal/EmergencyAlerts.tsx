@@ -110,20 +110,18 @@ const EmergencyAlerts = () => {
             </div>
             
             <div className="mt-4 flex justify-end space-x-2">
-              <a 
-                href={`tel:${signal.user.id}`} 
+              <button 
+                onClick={() => window.location.href = `tel:${signal.user.id}`} 
                 className="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded border border-blue-200"
               >
                 Call Civilian
-              </a>
-              <a 
-                href={`https://www.google.com/maps/search/?api=1&query=${signal.latitude},${signal.longitude}`} 
-                target="_blank" 
-                rel="noopener noreferrer"
+              </button>
+              <button 
+                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${signal.latitude},${signal.longitude}`, '_blank')}
                 className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded border border-green-200"
               >
                 Open in Maps
-              </a>
+              </button>
             </div>
           </div>
         ))}
