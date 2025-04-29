@@ -22,7 +22,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // WebSocket server for real-time emergency signals
   const wss = new WebSocketServer({ 
     server: httpServer,
-    path: "/ws" // Explicitly set the WebSocket path
+    path: "/ws", // Explicitly set the WebSocket path
+    clientTracking: true,
+    // Adding a ping interval to keep connections alive
+    perMessageDeflate: {
+      zlibDeflateOptions: {
+        chunkSize: 1024,
+        memLevel: 7,
+        level: 3
+      },
+      zlibInflateOptions: {
+        chunkSize: 10 * 1024
+      },
+      // Below options specified as default values
+      concurrencyLimit: 10,
+      threshold: 1024 // Size in bytes below which messages should not be compressed
+    }
   });
   
   const clients = new Set<any>();
@@ -32,7 +47,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     clients.add(ws);
     
     // Send a test message to confirm connection
-    ws.send(JSON.stringify({ type: "CONNECTED", message: "WebSocket connection established" }));
+    try {
+      ws.send(JSON.stringify({ type: "CONNECTED", message: "WebSocket connection established" }));
+    } catch (err) {
+      console.error("Failed to send welcome message:", err);
+    }
+    
+    // Set up a ping interval to keep the connection alive
+    const pingInterval = setInterval(() => {
+      if (ws.readyState === ws.OPEN) {
+        try {
+          ws.ping();
+        } catch (err) {
+          console.error("Ping failed:", err);
+        }
+      } else {
+        clearInterval(pingInterval);
+      }
+    }, 30000);
     
     ws.on("message", (message) => {
       try {
@@ -44,10 +76,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     ws.on("error", (error) => {
       console.error("WebSocket error:", error);
+      // Don't try to close on error - just let the connection die naturally
     });
     
     ws.on("close", (code, reason) => {
       console.log(`WebSocket client disconnected: ${code} ${reason}`);
+      clearInterval(pingInterval);
       clients.delete(ws);
     });
   });

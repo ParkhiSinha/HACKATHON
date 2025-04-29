@@ -125,28 +125,33 @@ const UserLayout = ({ children, title }: UserLayoutProps) => {
             <LanguageSelectorMobile />
           </div>
           <nav className="flex justify-between px-4 py-3">
-            <Link href="/">
-              <a className={`${location === '/' ? 'text-primary' : 'text-gray-500'} flex flex-col items-center text-xs`}>
-                <Home className={`text-lg mb-1 ${location === '/' ? 'text-primary' : 'text-gray-500'}`} />
-                Home
-              </a>
-            </Link>
-            <Link href="/report">
-              <a className={`${location === '/report' ? 'text-primary' : 'text-gray-500'} flex flex-col items-center text-xs`}>
-                <Plus className={`text-lg mb-1 ${location === '/report' ? 'text-primary' : 'text-gray-500'}`} />
-                Report
-              </a>
-            </Link>
-            <Link href="/my-reports">
-              <a className={`${location === '/my-reports' ? 'text-primary' : 'text-gray-500'} flex flex-col items-center text-xs`}>
-                <List className={`text-lg mb-1 ${location === '/my-reports' ? 'text-primary' : 'text-gray-500'}`} />
-                My Reports
-              </a>
-            </Link>
-            <a className="text-gray-500 flex flex-col items-center text-xs">
+            <div 
+              onClick={() => window.location.href = '/'}
+              className={`${location === '/' ? 'text-primary' : 'text-gray-500'} flex flex-col items-center text-xs cursor-pointer`}
+            >
+              <Home className={`text-lg mb-1 ${location === '/' ? 'text-primary' : 'text-gray-500'}`} />
+              Home
+            </div>
+            <div 
+              onClick={() => window.location.href = '/report'}
+              className={`${location === '/report' ? 'text-primary' : 'text-gray-500'} flex flex-col items-center text-xs cursor-pointer`}
+            >
+              <Plus className={`text-lg mb-1 ${location === '/report' ? 'text-primary' : 'text-gray-500'}`} />
+              Report
+            </div>
+            <div 
+              onClick={() => window.location.href = '/my-reports'}
+              className={`${location === '/my-reports' ? 'text-primary' : 'text-gray-500'} flex flex-col items-center text-xs cursor-pointer`}
+            >
+              <List className={`text-lg mb-1 ${location === '/my-reports' ? 'text-primary' : 'text-gray-500'}`} />
+              My Reports
+            </div>
+            <div 
+              className="text-gray-500 flex flex-col items-center text-xs cursor-pointer"
+            >
               <UserIcon className="text-lg mb-1 text-gray-500" />
               Profile
-            </a>
+            </div>
           </nav>
         </div>
       </header>
