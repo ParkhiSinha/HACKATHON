@@ -54,7 +54,7 @@ export const createEmergencyMarker = () => {
 // Hook to initialize and use Leaflet map
 export const useMap = (
   containerId: string, 
-  center: [number, number] = [40.7128, -74.0060], 
+  center: [number, number] = [12.9716, 77.5946], // Bengaluru coordinates
   zoom: number = 13
 ) => {
   const mapRef = useRef<L.Map | null>(null);

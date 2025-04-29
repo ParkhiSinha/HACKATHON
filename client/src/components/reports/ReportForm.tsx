@@ -112,7 +112,8 @@ export default function ReportForm() {
       setUploadedFiles((prev) => [...prev, ...fileUrls]);
       
       // Update form with evidence
-      const currentEvidence = form.getValues("evidence") || [];
+      const currentValues = form.getValues();
+      const currentEvidence = Array.isArray(currentValues.evidence) ? currentValues.evidence : [];
       form.setValue("evidence", [...currentEvidence, ...fileUrls]);
       
       setIsUploading(false);
@@ -127,12 +128,41 @@ export default function ReportForm() {
   // Handle form submission
   const onSubmit = async (values: ReportFormValues) => {
     try {
+      // Validate required fields
+      if (!values.crimeType) {
+        toast({
+          title: "Missing information",
+          description: "Please select an incident type.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!values.description) {
+        toast({
+          title: "Missing information",
+          description: "Please provide a description of the incident.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (!values.latitude || !values.longitude) {
+        toast({
+          title: "Missing information",
+          description: "Please select a location on the map.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Format the date to ISO string
       const formattedValues = {
         ...values,
         date: new Date(values.date).toISOString(),
       };
 
+      console.log("Submitting report:", formattedValues);
       await apiRequest("POST", "/api/reports", formattedValues);
       
       queryClient.invalidateQueries({ queryKey: ["/api/reports"] });
@@ -152,8 +182,36 @@ export default function ReportForm() {
       setUploadedFiles([]);
       
     } catch (error) {
+      console.error("Error submitting report:", error);
       toast({
         title: "Failed to submit report",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+  
+  // Handle save as draft
+  const saveDraft = () => {
+    try {
+      const currentValues = form.getValues();
+      // Store draft in localStorage
+      localStorage.setItem('reportDraft', JSON.stringify({
+        ...currentValues,
+        latitude: selectedLocation.latitude,
+        longitude: selectedLocation.longitude,
+        locationText: selectedLocation.locationText,
+        uploadedFiles
+      }));
+      
+      toast({
+        title: "Draft saved",
+        description: "Your report has been saved as a draft.",
+      });
+    } catch (error) {
+      console.error("Error saving draft:", error);
+      toast({
+        title: "Failed to save draft",
         description: "Please try again later.",
         variant: "destructive",
       });
@@ -185,16 +243,23 @@ export default function ReportForm() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="Theft">Theft</SelectItem>
-                        <SelectItem value="Vehicle Break-in">
-                          Vehicle Break-in
+                        <SelectItem value="Theft">Theft (चोरी / ಕಳ್ಳತನ)</SelectItem>
+                        <SelectItem value="Vehicle Theft">
+                          Vehicle Theft (वाहन चोरी / ವಾಹನ ಕಳ್ಳತನ)
                         </SelectItem>
-                        <SelectItem value="Break-in">Break-in</SelectItem>
-                        <SelectItem value="Vandalism">Vandalism</SelectItem>
+                        <SelectItem value="Break-in">Break-in (सेंध / ಮನೆಯೊಳಗೆ ನುಗ್ಗುವಿಕೆ)</SelectItem>
+                        <SelectItem value="Chain Snatching">Chain Snatching (चेन स्नैचिंग / ಚೈನ್ ಕದಿಯುವಿಕೆ)</SelectItem>
+                        <SelectItem value="Mobile Phone Theft">
+                          Mobile Phone Theft (मोबाइल चोरी / ಮೊಬೈಲ್ ಕಳ್ಳತನ)
+                        </SelectItem>
+                        <SelectItem value="Vandalism">Vandalism (तोड़फोड़ / ಸ್ವತ್ತಿಗೆ ಹಾನಿ)</SelectItem>
+                        <SelectItem value="Eve Teasing">Eve Teasing (छेड़छाड़ / ಕಿರುಕುಳ)</SelectItem>
+                        <SelectItem value="Traffic Violation">Traffic Violation (यातायात उल्लंघन / ಸಂಚಾರ ನಿಯಮ ಉಲ್ಲಂಘನೆ)</SelectItem>
+                        <SelectItem value="Cyber Crime">Cyber Crime (साइबर अपराध / ಸೈಬರ್ ಅಪರಾಧ)</SelectItem>
                         <SelectItem value="Suspicious Activity">
-                          Suspicious Activity
+                          Suspicious Activity (संदिग्ध गतिविधि / ಅನುಮಾನಾಸ್ಪದ ಚಟುವಟಿಕೆ)
                         </SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
+                        <SelectItem value="Other">Other (अन्य / ಇತರೆ)</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -334,7 +399,7 @@ export default function ReportForm() {
             </div>
 
             <div className="flex justify-end space-x-4">
-              <Button type="button" variant="outline">
+              <Button type="button" variant="outline" onClick={saveDraft}>
                 Save as Draft
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting}>
