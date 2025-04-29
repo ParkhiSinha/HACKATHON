@@ -140,7 +140,7 @@ export const useMap = (
       if (markersRef.current[signalId]) {
         // Update existing marker position
         markersRef.current[signalId].setLatLng([lat, lng]);
-      } else {
+      } else if (mapRef.current) {
         // Create new marker with pulse effect
         const icon = createEmergencyMarker();
         const timeAgo = getTimeAgo(new Date(signal.createdAt));
@@ -180,7 +180,7 @@ export const useMap = (
       if (markersRef.current[teamId]) {
         // Update existing marker position
         markersRef.current[teamId].setLatLng([lat, lng]);
-      } else {
+      } else if (mapRef.current) {
         // Create new marker
         const icon = createMarkerIcon('#1e40af', true);
         const newMarker = L.marker([lat, lng], { icon })
@@ -250,7 +250,7 @@ const getMarkerColor = (crimeType: string): string => {
   const type = crimeType.toLowerCase();
   
   if (type.includes('vehicle') || type.includes('car') || type.includes('theft')) {
-    return '#dc2626'; // Red for vehicle-related crimes
+    return '#dc2626'; // Red for vehicle/theft-related crimes
   }
   
   if (type.includes('break') || type.includes('burglary')) {
@@ -263,6 +263,22 @@ const getMarkerColor = (crimeType: string): string => {
   
   if (type.includes('vandalism')) {
     return '#7e22ce'; // Purple for vandalism
+  }
+  
+  if (type.includes('chain') || type.includes('snatching')) {
+    return '#f97316'; // Orange for chain snatching
+  }
+  
+  if (type.includes('cyber')) {
+    return '#0891b2'; // Cyan for cyber crime
+  }
+  
+  if (type.includes('eve') || type.includes('teasing')) {
+    return '#db2777'; // Pink for eve teasing
+  }
+  
+  if (type.includes('traffic') || type.includes('violation')) {
+    return '#65a30d'; // Lime for traffic violations
   }
   
   return '#2563eb'; // Default blue

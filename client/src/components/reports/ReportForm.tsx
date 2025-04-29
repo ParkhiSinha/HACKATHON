@@ -78,8 +78,47 @@ export default function ReportForm() {
   // Initialize map
   const { setupLocationSelect } = useMap(mapContainerId);
 
-  // Setup map location selection
+  // Check for draft and setup map location selection
   useEffect(() => {
+    // Check for a saved draft in localStorage
+    const savedDraft = localStorage.getItem('reportDraft');
+    if (savedDraft) {
+      try {
+        const draftData = JSON.parse(savedDraft);
+        
+        // Restore form values from draft
+        if (draftData.crimeType) form.setValue("crimeType", draftData.crimeType);
+        if (draftData.date) form.setValue("date", draftData.date);
+        if (draftData.description) form.setValue("description", draftData.description);
+        
+        // Restore location data
+        if (draftData.latitude && draftData.longitude) {
+          form.setValue("latitude", draftData.latitude);
+          form.setValue("longitude", draftData.longitude);
+          if (draftData.location) form.setValue("location", draftData.location);
+          
+          setSelectedLocation({
+            latitude: draftData.latitude,
+            longitude: draftData.longitude,
+            locationText: draftData.locationText || `${draftData.latitude}, ${draftData.longitude}`
+          });
+        }
+        
+        // Restore uploaded files
+        if (draftData.uploadedFiles && Array.isArray(draftData.uploadedFiles)) {
+          setUploadedFiles(draftData.uploadedFiles);
+          form.setValue("evidence", draftData.uploadedFiles);
+        }
+        
+        toast({
+          title: "Draft loaded",
+          description: "Your saved draft has been loaded.",
+        });
+      } catch (error) {
+        console.error("Error loading draft:", error);
+      }
+    }
+    
     const cleanup = setupLocationSelect((lat, lng) => {
       // Update the form with the selected coordinates
       setSelectedLocation({
@@ -217,11 +256,77 @@ export default function ReportForm() {
       });
     }
   };
+  
+  // Clear saved draft
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem('reportDraft');
+      
+      // Reset the form
+      form.reset({
+        crimeType: "",
+        description: "",
+        location: "",
+        latitude: "",
+        longitude: "",
+        date: new Date().toISOString().slice(0, 16),
+        status: "pending",
+        evidence: [],
+      });
+      
+      setSelectedLocation({
+        latitude: "",
+        longitude: "",
+        locationText: "",
+      });
+      
+      setUploadedFiles([]);
+      
+      toast({
+        title: "Draft cleared",
+        description: "Your saved draft has been cleared.",
+      });
+    } catch (error) {
+      console.error("Error clearing draft:", error);
+      toast({
+        title: "Failed to clear draft",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Check if there's a saved draft in localStorage
+  const hasSavedDraft = localStorage.getItem('reportDraft') !== null;
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Report an Incident</CardTitle>
+        {hasSavedDraft && (
+          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md flex items-start space-x-2">
+            <svg
+              className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <div>
+              <h4 className="text-sm font-medium text-blue-800">Draft Available</h4>
+              <p className="text-xs text-blue-600">
+                You have a previously saved draft that has been loaded. You can continue editing or clear it using the buttons below.
+              </p>
+            </div>
+          </div>
+        )}
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -292,17 +397,39 @@ export default function ReportForm() {
                     id={mapContainerId}
                     className="map-container rounded-lg overflow-hidden mb-2 h-60"
                   ></div>
-                  <FormControl>
-                    <Input
-                      placeholder="Search for address or click on the map to select location"
-                      {...field}
-                      value={
-                        selectedLocation.locationText || field.value
-                      }
-                    />
-                  </FormControl>
+                  <div className="flex space-x-2">
+                    <FormControl className="flex-1">
+                      <Input
+                        placeholder="Search for address or click on the map to select location"
+                        {...field}
+                        value={
+                          selectedLocation.locationText || field.value
+                        }
+                      />
+                    </FormControl>
+                    {selectedLocation.latitude && (
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        className="bg-slate-50 text-slate-700 border-slate-200"
+                        onClick={() => {
+                          setSelectedLocation({
+                            latitude: "",
+                            longitude: "",
+                            locationText: "",
+                          });
+                          form.setValue("latitude", "");
+                          form.setValue("longitude", "");
+                          form.setValue("location", "");
+                        }}
+                      >
+                        Clear Location
+                      </Button>
+                    )}
+                  </div>
                   <FormDescription>
-                    Click on the map to select the incident location
+                    Click on the map to select the incident location in Bengaluru
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -398,11 +525,30 @@ export default function ReportForm() {
               )}
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <Button type="button" variant="outline" onClick={saveDraft}>
-                Save as Draft
-              </Button>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
+            <div className="flex flex-wrap justify-end space-x-4">
+              <div className="flex space-x-2">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={clearDraft}
+                  className="bg-red-50 hover:bg-red-100 text-red-700 border-red-200"
+                >
+                  Clear Draft
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={saveDraft}
+                  className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                >
+                  Save as Draft
+                </Button>
+              </div>
+              <Button 
+                type="submit" 
+                disabled={form.formState.isSubmitting}
+                className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700"
+              >
                 {form.formState.isSubmitting
                   ? "Submitting..."
                   : "Submit Report"}
