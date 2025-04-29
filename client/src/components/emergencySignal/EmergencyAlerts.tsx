@@ -43,31 +43,94 @@ const EmergencyAlerts = () => {
   }
 
   return (
-    <div className="bg-red-50 border-l-4 border-secondary rounded-md p-4 mb-8">
-      <div className="flex">
-        <div className="flex-shrink-0">
-          <AlertTriangle className="h-5 w-5 text-secondary" />
+    <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-8">
+      <div className="flex items-center mb-4">
+        <div className="flex-shrink-0 bg-red-100 p-2 rounded-full">
+          <AlertTriangle className="h-5 w-5 text-red-600" />
         </div>
         <div className="ml-3">
-          <h3 className="text-sm font-medium text-secondary">
+          <h3 className="text-base font-bold text-red-800">
             Emergency Signals Active ({activeSignals.length})
           </h3>
-          <div className="mt-2 text-sm text-red-700">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-              {activeSignals.map((signal) => (
-                <div key={signal.id} className="bg-white p-3 rounded shadow-sm flex items-center">
-                  <div className="pulse bg-secondary rounded-full w-3 h-3 mr-3"></div>
-                  <div>
-                    <p className="font-medium">{signal.user.fullName}</p>
-                    <p className="text-xs text-gray-500">
-                      {getLocationText(signal.latitude, signal.longitude)} • {getTimeAgo(new Date(signal.createdAt))}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <p className="text-sm text-red-600">
+            Citizens requiring immediate police assistance in Bengaluru
+          </p>
+        </div>
+        <div className="ml-auto flex items-center">
+          <div className="animate-ping mr-2 h-2 w-2 rounded-full bg-red-500"></div>
+          <div className="text-xs font-medium text-red-700">
+            Live Updates
           </div>
         </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {activeSignals.map((signal) => (
+          <div 
+            key={signal.id} 
+            className="bg-white border border-red-100 p-4 rounded-md shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className="flex justify-between items-start mb-2">
+              <div className="flex items-center">
+                <div className="relative mr-3">
+                  <div className="absolute animate-ping h-4 w-4 rounded-full bg-red-200 opacity-75"></div>
+                  <div className="relative rounded-full h-4 w-4 bg-red-500"></div>
+                </div>
+                <p className="font-bold text-gray-900">{signal.user.fullName}</p>
+              </div>
+              <div className="px-2 py-1 bg-red-100 rounded text-xs font-medium text-red-800">
+                {getTimeAgo(new Date(signal.createdAt))}
+              </div>
+            </div>
+            
+            <div className="flex items-center mt-2 text-sm text-gray-600">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-4 w-4 mr-1 text-gray-500" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
+                />
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
+                />
+              </svg>
+              <span>
+                {getLocationText(signal.latitude, signal.longitude)}
+              </span>
+            </div>
+            
+            <div className="mt-4 flex justify-end space-x-2">
+              <a 
+                href={`tel:${signal.user.id}`} 
+                className="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded border border-blue-200"
+              >
+                Call Civilian
+              </a>
+              <a 
+                href={`https://www.google.com/maps/search/?api=1&query=${signal.latitude},${signal.longitude}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs px-3 py-1 bg-green-50 text-green-700 rounded border border-green-200"
+              >
+                Open in Maps
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="mt-4 text-center text-xs text-gray-500">
+        <p>Emergency signals can be responded to by Karnataka State Police. For assistance, contact Bengaluru City Police Control Room: <span className="font-medium">080-2294-3322</span></p>
       </div>
     </div>
   );
